@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/Assets/normal_map_ant.png" type="Texture" id=1]
+[ext_resource path="res://src/Assets/ant.png" type="Texture" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "autoload"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 4, 9, 9 ]
+}
+
+[node name="Spider" type="Sprite"]
+texture = ExtResource( 2 )
+normal_map = ExtResource( 1 )
+hframes = 24
+frame = 4
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+autoplay = "autoload"
+anims/autoload = SubResource( 1 )

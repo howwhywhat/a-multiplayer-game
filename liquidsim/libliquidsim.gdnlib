@@ -1,0 +1,16 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true
+
+[entry]
+
+OSX.64="res://liquidsim/osx/libliquidsim.dylib"
+Windows.64="res://liquidsim/libliquidsim.dll"
+
+[dependencies]
+
+OSX.64=[  ]
+Windows.64=[  ]
