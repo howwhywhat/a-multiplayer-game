@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://src/Scripts/Game.gd" type="Script" id=1]
 [ext_resource path="res://src/Assets/normal_map_walls.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://src/Assets/top.png" type="Texture" id=6]
 [ext_resource path="res://src/Assets/vines.png" type="Texture" id=7]
 [ext_resource path="res://src/Assets/bars.png" type="Texture" id=8]
+[ext_resource path="res://src/Assets/light.png" type="Texture" id=9]
 [ext_resource path="res://src/Assets/sewer_pipe.png" type="Texture" id=11]
 [ext_resource path="res://src/Assets/normal_map_sewer_pipe.png" type="Texture" id=12]
 [ext_resource path="res://src/Assets/cobweb.png" type="Texture" id=13]
@@ -564,3 +565,10 @@ autoplay = "move"
 anims/move = SubResource( 2 )
 
 [node name="Vignette" parent="." instance=ExtResource( 5 )]
+
+[node name="GlobalLighting" type="Light2D" parent="."]
+position = Vector2( 92.5516, 0 )
+scale = Vector2( 3.94721, 1 )
+texture = ExtResource( 9 )
+energy = 1.2
+mode = 2

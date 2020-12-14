@@ -1,9 +1,8 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://src/Scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://src/Assets/player.png" type="Texture" id=2]
 [ext_resource path="res://src/Scripts/PlayerFSM.gd" type="Script" id=3]
-[ext_resource path="res://src/Assets/light.png" type="Texture" id=4]
 [ext_resource path="res://src/Shaders/Outline.tres" type="Material" id=5]
 [ext_resource path="res://src/Scenes/MoveOrDie.tscn" type="PackedScene" id=6]
 [ext_resource path="res://src/Assets/normal_map_explosion.png" type="Texture" id=7]
@@ -187,16 +186,6 @@ visible = false
 position = Vector2( 0.423, 2.02 )
 scale = Vector2( 0.22099, 1 )
 shape = SubResource( 1 )
-
-[node name="LightingEffects" type="Light2D" parent="."]
-scale = Vector2( 5, 1 )
-texture = ExtResource( 4 )
-energy = 1.2
-mode = 2
-shadow_enabled = true
-shadow_color = Color( 0, 0, 0, 1 )
-shadow_filter = 2
-shadow_filter_smooth = 5.0
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 anims/death = SubResource( 2 )
