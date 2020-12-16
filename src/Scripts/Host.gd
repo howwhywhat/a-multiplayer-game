@@ -7,7 +7,7 @@ func _ready():
 
 func host():
 	var peer = NetworkedMultiplayerENet.new()
-	peer.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_RANGE_CODER)
+	peer.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_NONE)
 	var err = peer.create_server(Network.RPC_PORT, Network.MAX_PLAYERS)
 	
 	if err != OK:
@@ -21,3 +21,6 @@ func host():
 	set_disabled(true)
 	get_parent().get_node("Join").set_disabled(true)
 	emit_signal("set_connect_type", true)
+	
+	for nodes in get_tree().get_nodes_in_group("Slots"):
+		nodes.disabled = true

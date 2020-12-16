@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="some fucking multiplayer game"
+config/name="Oddball"
 run/main_scene="res://src/Scenes/Lobby.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
@@ -91,11 +91,20 @@ ui_down={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
  ]
 }
+shoot={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [layer_names]
 
 2d_physics/layer_1="Player"
 2d_physics/layer_2="Environment"
+2d_physics/layer_3="Ball"
+2d_physics/layer_4="Blockers"
+2d_physics/layer_5="Goal"
+2d_physics/layer_6="Hook"
 
 [rendering]
 

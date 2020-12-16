@@ -8,8 +8,10 @@
 [node name="Lobby" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 4 )
 __meta__ = {
+"_edit_horizontal_guides_": [  ],
 "_edit_use_anchors_": false
 }
 
@@ -98,7 +100,48 @@ text = "client ver 1.0.0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PlayerSlots" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player2" type="Button" parent="PlayerSlots" groups=[
+"Slots",
+]]
+margin_left = 90.9064
+margin_top = 282.75
+margin_right = 110.906
+margin_bottom = 302.75
+text = "2"
+
+[node name="Player4" type="Button" parent="PlayerSlots" groups=[
+"Slots",
+]]
+margin_left = 120.867
+margin_top = 283.872
+margin_right = 140.867
+margin_bottom = 303.872
+text = "4"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PlayerSlots"]
+margin_left = 92.0
+margin_top = 263.0
+margin_right = 154.0
+margin_bottom = 277.0
+text = "Players: 2"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Host" to="Host" method="host"]
 [connection signal="set_connect_type" from="Host" to="Connecting" method="set_connect_type"]
 [connection signal="pressed" from="Join" to="Join" method="_pressed"]
 [connection signal="set_connect_type" from="Join" to="Connecting" method="set_connect_type"]
+[connection signal="pressed" from="PlayerSlots/Player2" to="." method="_on_Player2_pressed"]
+[connection signal="pressed" from="PlayerSlots/Player4" to="." method="_on_Player4_pressed"]

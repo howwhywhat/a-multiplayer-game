@@ -19,17 +19,20 @@ onready var flashAnimation : AnimationPlayer = $FlashAnimation
 
 # general constants that hsould be global for every entity
 const ACCELERATION = 512
+const INERTIA = 500
 const MAX_SPEED = 128
 const FRICTION = 0.25
 const AIR_RESISTANCE = 0.02
 const JUMP_FORCE = 128
 const GRAVITY = 200
+const CHAIN_PULL = 105
 
 # wall sliding variables
 export (int) var WALL_SLIDE_SPEED = 48
 export (int) var MAX_WALL_SLIDE_SPEED = 128
 
 var motion : Vector2 = Vector2.ZERO
+var chain_motion : Vector2 = Vector2.ZERO
 var x_input = 0
 
 # coyote timer for jumping
@@ -49,14 +52,12 @@ onready var moveOrDie : TextureProgress = $MoveOrDie
 export (int) var moveOrDieHealth = 100
 export (int) var moveOrDieMaxHealth = 100
 
-# death animation
-onready var EXPLOSION_SCENE = preload("res://src/Scenes/ExplosionAnimation.tscn")
-
 # initializes the player with an uuid on peer connect and initializes any node that's unique to them
 func initialize(id):
 	uuid = id
 	name = str(id)
 	moveOrDie.intitalize(moveOrDieHealth, moveOrDieMaxHealth)
+	moveOrDie.visible = true
 	connect("player_idle", moveOrDie, "player_idle")
 	get_parent().camera.add_target(self)
 	get_parent().alivePlayers.append(self)
@@ -66,7 +67,14 @@ func initialize(id):
 # places move_and_slide outside of apply_movement method for gravity and etc
 func start_movement():
 	was_on_floor = is_on_floor() # checks if the player was on the ground before starting movement again
+	motion += chain_motion
 	motion = move_and_slide(motion, Vector2.UP)
+#	motion = move_and_slide(motion, Vector2.UP, false, 4, PI/4, false)
+	
+#	for index in get_slide_count():
+#		var collision = get_slide_collision(index)
+#		if collision.collider.is_in_group("Balls"):
+#			collision.collider.apply_central_impulse(-collision.normal * INERTIA)
 
 # start x-axis movement
 func apply_movement(delta):
@@ -129,56 +137,46 @@ func apply_gravity(delta):
 		motion.y += GRAVITY * delta
 		motion.y += GRAVITY * delta
 
-# instance the explosion scene for the death anim
-func instance_explosion():
-	var explosion = EXPLOSION_SCENE.instance()
-	var finalPos = global_position - Vector2(0, 5)
-	explosion.global_position = finalPos
-	explosion.rotation = rotation
-	get_parent().add_child(explosion)
+func _input(event : InputEvent) -> void:
+	if is_master:
+		if event is InputEventMouseButton:
+			if event.pressed:
+				$Chain.shoot(get_local_mouse_position())
+			else:
+				$Chain.release()
 
 # send unreliable packets here (doesn't matter if they get lost, they'll be replaced eventually)
 func _physics_process(delta):
 	if is_master:
-		if is_on_floor():
-			if rotation > deg2rad(45) and rotation < deg2rad(125):
-				sprite.scale.x = -1
-				sprite.flip_v = true
-			elif rotation > deg2rad(-120) and rotation < deg2rad(-40):
-				sprite.scale.x = -1
-				sprite.flip_v = true
-			elif rotation > deg2rad(-120):
-				sprite.scale.x = 1
-				sprite.flip_v = false
-			elif rotation < deg2rad(-40):
-				sprite.scale.x = 1
-				sprite.flip_v = false
-		print(rad2deg(rotation))
-		rotation = get_parent().rotation
-		rpc_unreliable("update_rotation", rotation)
-		rpc_unreliable("update_scale", sprite.scale.x)
-		rpc_unreliable("update_sprite_flip_v", sprite.flip_v)
-		rpc_unreliable("update_sprite_flip_h", sprite.flip_h)
-		rpc_unreliable("update_position", position, delta)
+		rpc_unreliable("update_position", global_position, delta)
+		
+		if $Chain.hooked:
+			chain_motion = to_local($Chain.tip).normalized() * CHAIN_PULL
+			if chain_motion.y > 0:
+				chain_motion.y *= 0.55
+			else:
+				chain_motion.y *= 1.65
+			if sign(chain_motion.x) != sign(x_input):
+				chain_motion.x *= 0.7
+		else:
+			chain_motion = Vector2.ZERO
+		
+		if get_parent().purple.has(self):
+			sprite.modulate = Color(1, 0, 0.89, 1)
+		if get_parent().yellow.has(self):
+			sprite.modulate = Color(1, 0.98, 0, 1)
+		rpc_unreliable("change_modulate", sprite.modulate)
 
 func _on_Animation_animation_started(anim_name):
 	rpc_unreliable("update_animations", anim_name)
 
-# changes rotation
-remote func update_rotation(new_rotation):
-	rotation = new_rotation
-
 # interpolates between last pos and current pos for player to get rid of any jitter in movement
 remote func update_position(pos, delta):
-	position = lerp(position, pos, FRICTION)
+	global_position = lerp(global_position, pos, FRICTION)
 
 # updates the flip_h of the sprite
 remote func update_sprite_flip_h(new_value):
 	sprite.flip_h = new_value
-
-# updates the flip_v of the sprite
-remote func update_sprite_flip_v(new_value):
-	sprite.flip_v = new_value
 
 # updates the scale for all clients used for the wall sliding
 remote func update_scale(new_value):
@@ -191,6 +189,10 @@ remote func update_animations(animationString):
 # play animation on flashanimation
 remote func play_flash_animation(animationString):
 	flashAnimation.play(animationString)
+
+# changes modulate
+remotesync func change_modulate(new_modulate):
+	sprite.modulate = new_modulate
 
 func _on_Animation_animation_finished(anim_name):
 	if anim_name == "death":

@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/Assets/normal_map_bullet_impact.png" type="Texture" id=1]
+[ext_resource path="res://src/Assets/bullet_impact.png" type="Texture" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "autoload"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.101, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 0, 1, 2 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "queue_free"
+} ]
+}
+
+[node name="Impact" type="Sprite"]
+texture = ExtResource( 2 )
+normal_map = ExtResource( 1 )
+hframes = 3
+frame = 2
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+autoplay = "autoload"
+anims/autoload = SubResource( 1 )

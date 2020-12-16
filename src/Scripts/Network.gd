@@ -1,7 +1,7 @@
 extends Node
 
 const RPC_PORT = 31400
-const MAX_PLAYERS = 2
+var MAX_PLAYERS = 2
 var current_players = 1
 const TESTING_IP = "127.0.0.1"
 const OFFLINE_TESTING = false
@@ -17,7 +17,7 @@ func initialize_client(server_ip):
 	if OFFLINE_TESTING:
 		server_ip = TESTING_IP
 	var peer = NetworkedMultiplayerENet.new()
-	peer.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_RANGE_CODER)
+	peer.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_NONE)
 	peer.create_client(server_ip, RPC_PORT)
 	get_tree().set_network_peer(peer)
 

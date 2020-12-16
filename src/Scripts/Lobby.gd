@@ -37,3 +37,11 @@ remote func begin_game():
 	get_tree().get_root().add_child(game)
 	get_tree().current_scene = game
 	hide()
+
+func _on_Player2_pressed():
+	Network.MAX_PLAYERS = 2
+	$PlayerSlots/Label.text = "Players: 2"
+
+func _on_Player4_pressed():
+	Network.MAX_PLAYERS = 4
+	$PlayerSlots/Label.text = "Players: 4"

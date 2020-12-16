@@ -5,6 +5,7 @@ var state_logic_enabled = true
 func _ready():
 	add_state("idle")
 	add_state("walk")
+#	add_state("shoot")
 	add_state("death")
 	add_state("jump")
 	add_state("wall_slide")
@@ -45,6 +46,8 @@ func _get_transition(delta):
 					return states.jump
 				if parent.motion.y > 0 && parent.was_on_floor && parent.coyoteTimer.is_stopped():
 					return states.fall
+#			if Input.is_action_pressed("shoot") and parent.can_fire:
+#				return states.shoot
 			if parent.moveOrDieHealth <= 0:
 				return states.death
 		states.walk:
@@ -59,6 +62,8 @@ func _get_transition(delta):
 					return states.jump
 				if parent.motion.y > 0 && parent.was_on_floor && parent.coyoteTimer.is_stopped():
 					return states.fall
+#			if Input.is_action_pressed("shoot") and parent.can_fire:
+#				return states.shoot
 			if parent.moveOrDieHealth <= 0:
 				return states.death
 		states.jump:
@@ -73,6 +78,8 @@ func _get_transition(delta):
 					return states.wall_slide
 				if parent.motion.y > 0 && parent.was_on_floor && parent.coyoteTimer.is_stopped():
 					return states.fall
+#			if Input.is_action_pressed("shoot") and parent.can_fire:
+#				return states.shoot
 			if parent.moveOrDieHealth <= 0:
 				return states.death
 		states.fall:
@@ -87,6 +94,8 @@ func _get_transition(delta):
 					return states.wall_slide
 				if parent.motion.y < 0 and !parent.jumpBuffer.is_stopped():
 					return states.jump
+#			if Input.is_action_pressed("shoot") and parent.can_fire:
+#				return states.shoot
 			if parent.moveOrDieHealth <= 0:
 				return states.death
 		states.wall_slide:
@@ -95,6 +104,24 @@ func _get_transition(delta):
 				return states.idle
 			if parent.moveOrDieHealth <= 0:
 				return states.death
+#			if Input.is_action_pressed("shoot") and parent.can_fire:
+#				return states.shoot
+#		states.shoot:
+#			parent.stateText.text = "shoot"
+#			if parent.is_on_floor():
+#				if parent.x_input == 0:
+#					return states.idle
+#				if parent.x_input != 0:
+#					return states.walk
+#			else:
+#				if parent.is_on_wall():
+#					return states.wall_slide
+#				if parent.motion.y < 0 and !parent.jumpBuffer.is_stopped():
+#					return states.jump
+#				if parent.motion.y > 0 && parent.was_on_floor && parent.coyoteTimer.is_stopped():
+#					return states.fall
+#			if parent.moveOrDieHealth <= 0:
+#				return states.death
 	return null
 
 func _enter_state(new_state, old_state):
@@ -137,6 +164,8 @@ func _enter_state(new_state, old_state):
 			parent.animation.play("death")
 			parent.rpc("update_animations", "death")
 			parent.rpc("play_flash_animation", "flash")
+#		states.shoot:
+#			parent.shoot_bullet()
 
 func _exit_state(old_state, new_state):
 	match old_state:
